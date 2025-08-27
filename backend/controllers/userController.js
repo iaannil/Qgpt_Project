@@ -26,9 +26,9 @@ export const registerUser = async(req, res) =>{
         const token = generateToken(user._id)
         res.json({success:true , token})
 
-    }catch(err){
+    }catch(error){
          return res.json({success:false,
-            message:err.message
+            message:error.message
          })
     }
 }
@@ -58,7 +58,7 @@ export const loginUser = async (req,res) =>{
 
 //API to get User data
 
-export const getUser = async (req,res)=>{
+export const getUser = async (req,res) => {
     try {
 
         const user = req.user;
