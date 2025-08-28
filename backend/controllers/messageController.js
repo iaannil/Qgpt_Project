@@ -16,22 +16,22 @@ export const textMessageController = async ( req,res) =>{
             return res.json({success:false,message:"You don't have enough credits to use this feature"})
         }
 
-        const[chatId, prompt] = req.body
+        const {chatId, prompt} = req.body
 
         const chat = await Chat.findOne({userId, _id: chatId})
         chat.messages.push({role:"user",content:prompt,timestamp:Date.now(),isImage:false})
 
 //openai code
 
-        const {choices} = await openai.client.chat.completions.create({
+        const {choices} = await openai.chat.completions.create({
     model:"gemini-2.5-flash",
     messages:[
         {
             role: "user",
             content: prompt
-        }
-    ]
-    })
+        },
+    
+    ],});
     const reply = {...choices[0].message , timestamp:Date.now(),isImage:false}
     
     res.json({success:true, reply})
