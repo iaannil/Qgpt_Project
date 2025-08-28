@@ -2,6 +2,8 @@ import axios from 'axios'
 import Chat from "../models/Chat.js"
 import User from "../models/User.js"
 import imagekit from '../configs/imageKit.js'
+import openai from "../configs/openai.js";
+
 
 
 //Text based Ai chat message controller
@@ -21,7 +23,7 @@ export const textMessageController = async ( req,res) =>{
 
 //openai code
 
-        const {choices} = client.chat.completions.create({
+        const {choices} = await openai.client.chat.completions.create({
     model:"gemini-2.5-flash",
     messages:[
         {
@@ -30,7 +32,7 @@ export const textMessageController = async ( req,res) =>{
         }
     ]
     })
-    const reply = {...choices[0].message , timestamp:Date.noe(),isImage:false}
+    const reply = {...choices[0].message , timestamp:Date.now(),isImage:false}
     
     res.json({success:true, reply})
 

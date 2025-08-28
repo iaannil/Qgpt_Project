@@ -1,8 +1,9 @@
-import {OpenAI} from "openai"
+// backend/configs/openai.js
+import OpenAI from "openai";
 
-const openai = new OpenAI(
-    apikey= process.env.GEMINI_API_KEY,
-    baseURL="https://generativelanguage.googleapis.com/v1beta/openai/"
-)
+const openai = new OpenAI({
+  apiKey: process.env.GEMINI_API_KEY,
+  baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/"
+});
 
-export default openai
+export default openai;

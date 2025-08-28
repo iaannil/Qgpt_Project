@@ -11,7 +11,7 @@ export const createChat = async (req,res) =>{
         const chatData = {
             userId,
             messages:[],
-            name: "",
+            name: "New Chat",
             userName : req.user.name
         }
         await Chat.create(chatData)
