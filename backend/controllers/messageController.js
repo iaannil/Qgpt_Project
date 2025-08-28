@@ -1,3 +1,4 @@
+
 import axios from 'axios'
 import Chat from "../models/Chat.js"
 import User from "../models/User.js"
@@ -69,28 +70,33 @@ export const imageMessageController = async (req,res) => {
             isImage:false
         })
 
+
+
         //Encode the Prompt
         const encodedPrompt = encodeURIComponent(prompt)
 
         //constructed imagekit Ai generation
 
-        const generatedImageUrl = `${process.env.IMAGEKIT_URL_ENDPOINT}/ik-genimg-prompt-${encodedPrompt}/Qgpt/${Date.now()}.png?tr=w-800,h-800` ;
+        const generatedImageUrl = `${process.env.IMAGEKIT_URL_ENDPOINT}/ik-genimg-prompt-${encodedPrompt}/Sgpt/${Date.now()}.png?tr=w-800,h-800` ;
 //trigger generation by fetching from imagekit
-        const aiImageResponse = await axios.get(generatedImageUrl, {responseType:"arraybuffer"})
+        const aiImageResponse = await axios.get(generatedImageUrl, { responseType: "arraybuffer" })
+
 
         //conver to base64
 
         const base64Image =`data:image/png;base64,${Buffer.from(aiImageResponse.data,'binary').toString('base64')}`;
+       
+
 
         //upload iagekit to media library
         
         const uploadResponse = await imagekit.upload({
             file:base64Image,
-            filaName: `${Date.now()}.png`,
-            folder:"Qgpt"
+            fileName: `${Date.now()}.png`,
+            folder:"Sgpt"
         })
 
-        const reply = {role:'assistant',content:uploadResponse.url , timestamp:Date.noe(),isImage:true,isPublished}
+        const reply = {role:'assistant',content:uploadResponse.url , timestamp:Date.now(),isImage:true,isPublished}
         res.json({success:true, reply})
 
         chat.messages.push(reply)
@@ -100,6 +106,9 @@ export const imageMessageController = async (req,res) => {
 
 
     } catch (error) {
-        res.json({success:false,message:error.message})
-    }
-}
+  console.error("Image generation error:", error.response?.data || error.message || error);
+  res.status(500).json({
+    success: false,
+    message: error.response?.data || error.message || "Server error",
+  });
+}}
